@@ -5,20 +5,26 @@ import {
   FlatList,
   Dimensions,
   Image,
+  TouchableOpacity,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import axios from 'axios';
 import paddingHelper from '../utils/paddingHelper';
 import NavigationBackComponent from '../components/NavigationBack';
 import shadowProp from '../utils/shadowProp';
 import AnimatedLoader from 'react-native-animated-loader';
+import {Pagination} from 'react-native-snap-carousel';
+import {act} from 'react-test-renderer';
 
 const {width, height} = Dimensions.get('window');
 
 const DetailScreen = props => {
   const params = props.route.params.item.id;
-  console.log(params, typeof params);
+
+  const [activeIndex, setActiveIndex] = useState(0);
+  const flatListRef = useRef(null);
   const [Data, setData] = useState([]);
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   useEffect(() => {
@@ -41,6 +47,11 @@ const DetailScreen = props => {
       setError(true);
     }
   };
+  const handlePaginationPress = index => {
+    flatListRef.current.scrollToIndex({animated: true, index}); // Scroll FlatList to the selected index
+    setActiveIndex(index);
+  };
+
   return (
     <View style={[{flex: 1, backgroundColor: 'white'}, paddingHelper()]}>
       {console.log(Data)}
@@ -67,13 +78,34 @@ const DetailScreen = props => {
               shadowProp(10, 'black'),
             ]}>
             <FlatList
+              ref={flatListRef}
               data={Data.images}
               showsHorizontalScrollIndicator={false}
               renderItem={renderItem}
               keyExtractor={item => item.id}
               horizontal
               pagingEnabled
+              onScroll={event => {
+                const contentOffsetX = event.nativeEvent.contentOffset.x;
+                const currentIndex = Math.round(contentOffsetX / width);
+                setActiveIndex(currentIndex);
+              }}
             />
+          </View>
+          <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+            {Data?.images?.map((_, index) => (
+              <TouchableOpacity
+                key={index}
+                style={[
+                  {width: 10, height: 10, borderRadius: 5, margin: 5},
+                  index == activeIndex
+                    ? {backgroundColor: 'blue'}
+                    : {backgroundColor: 'grey'},
+                ]}
+                onPress={() => handlePaginationPress(index)}>
+                {console.log(index, activeIndex)}
+              </TouchableOpacity>
+            ))}
           </View>
 
           <View style={styles.detailsContainer}>
@@ -114,15 +146,6 @@ const DetailScreen = props => {
               </View>
             </View>
           </View>
-          {/* <View>
-            <Text>{Data.title}</Text>
-            <Text>{Data.brand}</Text>
-            <Text>{Data.price}</Text>
-            <Text>{Data.rating}</Text>
-            <Text>{Data.stock}</Text>
-            <Text>{Data.description}</Text>
-            <Text>{Data.discountPercentage}</Text>
-          </View> */}
         </View>
       ) : (
         <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>

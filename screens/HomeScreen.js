@@ -78,7 +78,7 @@ const HomeScreen = () => {
           }}>
           Welcome to Shopping Cart
         </Text>
-        <View
+        {/* <View
           style={{
             flexDirection: 'row',
             alignItems: 'center',
@@ -104,7 +104,7 @@ const HomeScreen = () => {
               marginRight: '5%',
               borderRadius: 3,
             }}></TextInput>
-        </View>
+        </View> */}
       </LinearGradient>
       <AnimatedLoader
         visible={loading}

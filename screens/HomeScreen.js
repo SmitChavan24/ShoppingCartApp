@@ -1,12 +1,9 @@
 import {
-  Button,
   StyleSheet,
   Text,
   View,
   StatusBar,
   Dimensions,
-  TextInput,
-  ScrollView,
   FlatList,
   Pressable,
   Image,
@@ -30,18 +27,13 @@ const HomeScreen = () => {
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(handleConnectivityChange);
-
-    // Fetch data on initial render
     FetchProducts();
-
-    // Cleanup when component unmounts
     return () => {
       unsubscribe();
     };
   }, []);
   const handleConnectivityChange = state => {
     if (state.isConnected) {
-      // Internet connection is available, fetch data
       FetchProducts();
     }
   };
@@ -195,7 +187,7 @@ const styles = StyleSheet.create({
   titleText: {
     fontWeight: '700',
     letterSpacing: 0.3,
-    fontSize: 16,
+    fontSize: 18,
     color: 'black',
   },
   container: {
@@ -248,12 +240,11 @@ const styles = StyleSheet.create({
     height: 200,
   },
   description: {
-    fontSize: 10,
+    fontSize: 14,
     width: '25%',
     color: '#00004d',
-    // fontFamily: 'PlusJakartaSans-SemiBoldItalic',
     fontWeight: '500',
     marginVertical: '1.5%',
   },
-  dataDesc: {fontSize: 14, color: '#000033', width: '70%'},
+  dataDesc: {fontSize: 18, color: '#000033', width: '70%'},
 });

@@ -220,14 +220,14 @@ const styles = StyleSheet.create({
     marginBottom: '3%',
   },
   labelText: {
-    fontSize: 12,
+    fontSize: 14,
     color: '#7A7A7A',
-    lineHeight: 24,
+    lineHeight: 30,
     width: '55%',
   },
   valueText: {
-    fontSize: 12,
-    lineHeight: 24,
+    fontSize: 14,
+    lineHeight: 30,
     color: '#0E0E0E',
     marginLeft: '10%',
     width: '70%',

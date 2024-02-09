@@ -19,12 +19,11 @@ import {act} from 'react-test-renderer';
 const {width, height} = Dimensions.get('window');
 
 const DetailScreen = props => {
-  const params = props.route.params.item.id;
+  const params = props?.route?.params?.item?.id;
 
   const [activeIndex, setActiveIndex] = useState(0);
   const flatListRef = useRef(null);
   const [Data, setData] = useState([]);
-
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   useEffect(() => {
@@ -36,7 +35,7 @@ const DetailScreen = props => {
         `https://dummyjson.com/products/${params}`,
       );
       if (response) {
-        setData(response.data);
+        setData(response?.data);
         setLoading(false);
         setError(false);
       } else {
@@ -48,7 +47,7 @@ const DetailScreen = props => {
     }
   };
   const handlePaginationPress = index => {
-    flatListRef.current.scrollToIndex({animated: true, index}); // Scroll FlatList to the selected index
+    flatListRef.current.scrollToIndex({animated: true, index});
     setActiveIndex(index);
   };
 
@@ -102,9 +101,7 @@ const DetailScreen = props => {
                     ? {backgroundColor: 'blue'}
                     : {backgroundColor: 'grey'},
                 ]}
-                onPress={() => handlePaginationPress(index)}>
-                {console.log(index, activeIndex)}
-              </TouchableOpacity>
+                onPress={() => handlePaginationPress(index)}></TouchableOpacity>
             ))}
           </View>
 
@@ -115,34 +112,34 @@ const DetailScreen = props => {
             <View style={styles.table}>
               <View style={styles.flexrow}>
                 <Text style={styles.labelText}>{'Name'}</Text>
-                <Text style={styles.valueText}>{Data.title}</Text>
+                <Text style={styles.valueText}>{Data?.title}</Text>
               </View>
               <View style={styles.flexrow}>
                 <Text style={styles.labelText}>{'Brand'}</Text>
-                <Text style={styles.valueText}>{Data.brand}</Text>
+                <Text style={styles.valueText}>{Data?.brand}</Text>
               </View>
               <View style={styles.flexrow}>
                 <Text style={styles.labelText}>{'Price'}</Text>
-                <Text style={styles.valueText}>{`${Data.price} INR`}</Text>
+                <Text style={styles.valueText}>{`${Data?.price} INR`}</Text>
               </View>
               <View style={styles.flexrow}>
                 <Text style={styles.labelText}>{'Rating'}</Text>
-                <Text style={styles.valueText}>{Data.rating}</Text>
+                <Text style={styles.valueText}>{Data?.rating}</Text>
               </View>
               <View style={styles.flexrow}>
                 <Text style={styles.labelText}>{'In Stock'}</Text>
-                <Text style={styles.valueText}>{`${Data.stock} units`}</Text>
+                <Text style={styles.valueText}>{`${Data?.stock} units`}</Text>
               </View>
               <View style={styles.flexrow}>
                 <Text style={styles.labelText}>{'Discount'}</Text>
                 <Text
                   style={
                     styles.valueText
-                  }>{`${Data.discountPercentage} %`}</Text>
+                  }>{`${Data?.discountPercentage} %`}</Text>
               </View>
               <View style={styles.flexrow}>
                 <Text style={styles.labelText}>{'Description'}</Text>
-                <Text style={styles.valueText}>{Data.description}</Text>
+                <Text style={styles.valueText}>{Data?.description}</Text>
               </View>
             </View>
           </View>
@@ -156,19 +153,20 @@ const DetailScreen = props => {
   );
 };
 const renderItem = ({item, index}) => (
-  <Image
-    key={index}
-    source={{uri: item}}
-    style={[
-      {
-        height: (height * 30.5) / 100,
-        width: (width * 100) / 100,
-        padding: '3%',
-        resizeMode: 'contain',
-        borderRadius: 5,
-      },
-    ]}
-  />
+  <View key={index}>
+    <Image
+      source={{uri: item}}
+      style={[
+        {
+          height: (height * 30.5) / 100,
+          width: (width * 100) / 100,
+          padding: '3%',
+          resizeMode: 'contain',
+          borderRadius: 5,
+        },
+      ]}
+    />
+  </View>
 );
 
 export default DetailScreen;
@@ -203,14 +201,12 @@ const styles = StyleSheet.create({
     marginBottom: '3%',
   },
   labelText: {
-    // fontFamily: globalColors.fontMedium,
     fontSize: 12,
     color: '#7A7A7A',
     lineHeight: 24,
     width: '55%',
   },
   valueText: {
-    // fontFamily: globalColors.fontRegular,
     fontSize: 12,
     lineHeight: 24,
     color: '#0E0E0E',

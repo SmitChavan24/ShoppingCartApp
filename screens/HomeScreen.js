@@ -34,7 +34,7 @@ const HomeScreen = () => {
     try {
       const response = await axios.get('https://dummyjson.com/products');
       if (response) {
-        setData(response.data.products);
+        setData(response?.data?.products);
         setLoading(false);
         setError(false);
       } else {
@@ -42,7 +42,6 @@ const HomeScreen = () => {
         setError(true);
       }
     } catch (error) {
-      // console.error('Error fetching products:', error);
       setError(true);
     }
   };
@@ -143,7 +142,7 @@ const HomeScreen = () => {
                 onPress={() => navigation.navigate('details', {item})}>
                 <Image
                   source={{
-                    uri: item.thumbnail,
+                    uri: item?.thumbnail,
                   }}
                   style={{
                     height: (height * 17) / 100,
@@ -169,23 +168,24 @@ const HomeScreen = () => {
                       fontSize: 16,
                       color: 'black',
                     }}>
-                    {item.title}
+                    {item?.title}
                   </Text>
 
                   <View style={{marginTop: '2%'}}>
                     <View style={{flexDirection: 'row', alignItems: 'center'}}>
                       <Text style={styles.description}>{'Brand '}</Text>
-                      <Text style={styles.dataDesc}>{item.brand}</Text>
+                      <Text style={styles.dataDesc}>{item?.brand}</Text>
                     </View>
 
                     <View style={{flexDirection: 'row', alignItems: 'center'}}>
                       <Text style={styles.description}>{'Price '}</Text>
-                      <Text style={styles.dataDesc}>{`${item.price} INR`}</Text>
+                      <Text
+                        style={styles.dataDesc}>{`${item?.price} INR`}</Text>
                     </View>
 
                     <View style={{flexDirection: 'row', alignItems: 'center'}}>
                       <Text style={styles.description}>{'Ratings '}</Text>
-                      <Text style={styles.dataDesc}>{item.rating}</Text>
+                      <Text style={styles.dataDesc}>{item?.rating}</Text>
                     </View>
 
                     <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -193,7 +193,7 @@ const HomeScreen = () => {
                       <Text
                         style={
                           styles.dataDesc
-                        }>{`${item.discountPercentage} %`}</Text>
+                        }>{`${item?.discountPercentage} %`}</Text>
                     </View>
                   </View>
                 </View>

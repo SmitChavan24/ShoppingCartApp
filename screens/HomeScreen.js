@@ -38,7 +38,6 @@ const HomeScreen = () => {
         setLoading(false);
         setError(false);
       } else {
-        console.log('im here');
         setError(true);
       }
     } catch (error) {

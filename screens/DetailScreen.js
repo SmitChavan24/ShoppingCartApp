@@ -42,7 +42,6 @@ const DetailScreen = props => {
         setError(true);
       }
     } catch (error) {
-      console.error('Error fetching data:', error);
       setError(true);
     }
   };
@@ -53,7 +52,6 @@ const DetailScreen = props => {
 
   return (
     <View style={[{flex: 1, backgroundColor: 'white'}, paddingHelper()]}>
-      {console.log(Data)}
       <NavigationBackComponent
         name="Product Details"
         onPress={() => props.navigation.navigate('home')}

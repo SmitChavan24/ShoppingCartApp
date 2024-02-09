@@ -240,7 +240,8 @@ const styles = StyleSheet.create({
   description: {
     fontSize: 10,
     width: '25%',
-    fontFamily: 'PlusJakartaSans-SemiBoldItalic',
+    // fontFamily: 'PlusJakartaSans-SemiBoldItalic',
+    fontWeight: '500',
     marginVertical: '1.5%',
   },
   dataDesc: {fontSize: 14, color: '#000033', width: '70%'},

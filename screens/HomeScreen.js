@@ -202,6 +202,7 @@ const styles = StyleSheet.create({
     borderRadius: 2,
     borderColor: 'grey',
     borderWidth: 0.5,
+    marginVertical: '5%',
   },
   cards: {
     width: (width * 90) / 100,

@@ -118,47 +118,45 @@ const HomeScreen = () => {
         showsVerticalScrollIndicator={false}
         style={styles.flt}
         renderItem={({item, index}) => (
-          <View style={styles.cardContainer}>
-            <Pressable
-              style={[styles.cards, shadowProp(1)]}
-              key={index}
-              onPress={() => navigation.navigate('details', {item})}>
-              <Image
-                source={{
-                  uri: item?.thumbnail,
-                }}
-                style={styles.img}
-              />
-              <View style={styles.container}>
-                <Text style={styles.titleText}>{item?.title}</Text>
+          <Pressable
+            style={[styles.cards, shadowProp(1)]}
+            key={index}
+            onPress={() => navigation.navigate('details', {item})}>
+            <Image
+              source={{
+                uri: item?.thumbnail,
+              }}
+              style={styles.img}
+            />
+            <View style={styles.container}>
+              <Text style={styles.titleText}>{item?.title}</Text>
 
-                <View style={{marginTop: '2%'}}>
-                  <View style={styles.row}>
-                    <Text style={styles.description}>{'Brand '}</Text>
-                    <Text style={styles.dataDesc}>{item?.brand}</Text>
-                  </View>
+              <View style={{marginTop: '2%'}}>
+                <View style={styles.row}>
+                  <Text style={styles.description}>{'Brand '}</Text>
+                  <Text style={styles.dataDesc}>{item?.brand}</Text>
+                </View>
 
-                  <View style={styles.row}>
-                    <Text style={styles.description}>{'Price '}</Text>
-                    <Text style={styles.dataDesc}>{`${item?.price} INR`}</Text>
-                  </View>
+                <View style={styles.row}>
+                  <Text style={styles.description}>{'Price '}</Text>
+                  <Text style={styles.dataDesc}>{`${item?.price} INR`}</Text>
+                </View>
 
-                  <View style={styles.row}>
-                    <Text style={styles.description}>{'Ratings '}</Text>
-                    <Text style={styles.dataDesc}>{item?.rating}</Text>
-                  </View>
+                <View style={styles.row}>
+                  <Text style={styles.description}>{'Ratings '}</Text>
+                  <Text style={styles.dataDesc}>{item?.rating}</Text>
+                </View>
 
-                  <View style={styles.row}>
-                    <Text style={styles.description}>{'Discount '}</Text>
-                    <Text
-                      style={
-                        styles.dataDesc
-                      }>{`${item?.discountPercentage} %`}</Text>
-                  </View>
+                <View style={styles.row}>
+                  <Text style={styles.description}>{'Discount '}</Text>
+                  <Text
+                    style={
+                      styles.dataDesc
+                    }>{`${item?.discountPercentage} %`}</Text>
                 </View>
               </View>
-            </Pressable>
-          </View>
+            </View>
+          </Pressable>
         )}
       />
 
@@ -176,7 +174,6 @@ const HomeScreen = () => {
 export default HomeScreen;
 
 const styles = StyleSheet.create({
-  cardContainer:{marginBottom: '5%', marginTop: 10},
   row: {flexDirection: 'row', alignItems: 'center'},
   bottomLinear: {
     alignSelf: 'baseline',
@@ -191,11 +188,12 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   container: {
-    height: (height * 17) / 100,
+    // height: (height * 17) / 100,
     flex: 2,
     marginLeft: '5%',
     marginRight: '3%',
     marginTop: '5%',
+    marginBottom: '5%',
   },
   img: {
     height: (height * 17) / 100,
@@ -206,7 +204,6 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
   },
   cards: {
-    height: (height * 20) / 100,
     width: (width * 90) / 100,
     borderRadius: 5,
     borderColor: '#f2f2f2',
@@ -214,10 +211,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     alignItems: 'center',
     flexDirection: 'row',
+    marginBottom: '5%',
+    marginTop: 10,
   },
   flt: {
     alignSelf: 'center',
-    paddingVertical: '5%',
   },
   title: {
     fontSize: 20,
@@ -242,6 +240,7 @@ const styles = StyleSheet.create({
   description: {
     fontSize: 14,
     width: '25%',
+    flexGrow: 1,
     color: '#00004d',
     fontWeight: '500',
     marginVertical: '1.5%',

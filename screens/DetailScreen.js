@@ -6,6 +6,7 @@ import {
   Dimensions,
   Image,
   TouchableOpacity,
+  ScrollView,
 } from 'react-native';
 import React, {useEffect, useState, useRef} from 'react';
 import axios from 'axios';
@@ -13,7 +14,7 @@ import paddingHelper from '../utils/paddingHelper';
 import NavigationBackComponent from '../components/NavigationBack';
 import shadowProp from '../utils/shadowProp';
 import AnimatedLoader from 'react-native-animated-loader';
-import NetInfo from "@react-native-community/netinfo";
+import NetInfo from '@react-native-community/netinfo';
 
 const {width, height} = Dimensions.get('window');
 
@@ -31,9 +32,8 @@ const DetailScreen = props => {
     return () => {
       unsubscribe();
     };
-
   }, []);
-  const handleConnectivityChange = (state) => {
+  const handleConnectivityChange = state => {
     if (state.isConnected) {
       // Internet connection is available, fetch data
       FetchUniqueProducts();
@@ -75,102 +75,90 @@ const DetailScreen = props => {
         animationStyle={styles.lottie}
         speed={0.6}
       />
-              <AnimatedLoader
+      <AnimatedLoader
         visible={error}
         overlayColor="grey"
         source={require('../assets/lottie/error.json')}
         animationStyle={styles.lottie}
         speed={0.6}
       />
-      
-        <View>
-          <View
-            style={[
-              styles.container,
-              shadowProp(10, 'black'),
-            ]}>
-            <FlatList
-              ref={flatListRef}
-              data={Data.images}
-              showsHorizontalScrollIndicator={false}
-              renderItem={renderItem}
-              keyExtractor={(item, index) => index.toString()}
-              horizontal
-              pagingEnabled
-              onScroll={event => {
-                const contentOffsetX = event.nativeEvent.contentOffset.x;
-                const currentIndex = Math.round(contentOffsetX / width);
-                setActiveIndex(currentIndex);
-              }}
-            />
-          </View>
-          <View style={styles.paginate}>
-            {Data?.images?.map((_, index) => (
-              <TouchableOpacity
-                key={index}
-                style={[
-                 styles.tPagi  ,
-                  index == activeIndex
-                    ? {backgroundColor: 'blue'}
-                    : {backgroundColor: 'grey'},
-                ]}
-                onPress={() => handlePaginationPress(index)}></TouchableOpacity>
-            ))}
-          </View>
 
-          <View style={styles.detailsContainer}>
-            <View style={styles.detailHeader}>
-              <Text>{'Product Details'}</Text>
+      <ScrollView>
+        <View style={[styles.container, shadowProp(10, 'black')]}>
+          <FlatList
+            ref={flatListRef}
+            data={Data.images}
+            showsHorizontalScrollIndicator={false}
+            renderItem={renderItem}
+            keyExtractor={(item, index) => index.toString()}
+            horizontal
+            pagingEnabled
+            onScroll={event => {
+              const contentOffsetX = event.nativeEvent.contentOffset.x;
+              const currentIndex = Math.round(contentOffsetX / width);
+              setActiveIndex(currentIndex);
+            }}
+          />
+        </View>
+        <View style={styles.paginate}>
+          {Data?.images?.map((_, index) => (
+            <TouchableOpacity
+              key={index}
+              style={[
+                styles.tPagi,
+                index == activeIndex
+                  ? {backgroundColor: 'blue'}
+                  : {backgroundColor: 'grey'},
+              ]}
+              onPress={() => handlePaginationPress(index)}></TouchableOpacity>
+          ))}
+        </View>
+
+        <View style={styles.detailsContainer}>
+          <View style={styles.detailHeader}>
+            <Text>{'Product Details'}</Text>
+          </View>
+          <View style={styles.table}>
+            <View style={styles.flexrow}>
+              <Text style={styles.labelText}>{'Name'}</Text>
+              <Text style={styles.valueText}>{Data?.title}</Text>
             </View>
-            <View style={styles.table}>
-              <View style={styles.flexrow}>
-                <Text style={styles.labelText}>{'Name'}</Text>
-                <Text style={styles.valueText}>{Data?.title}</Text>
-              </View>
-              <View style={styles.flexrow}>
-                <Text style={styles.labelText}>{'Brand'}</Text>
-                <Text style={styles.valueText}>{Data?.brand}</Text>
-              </View>
-              <View style={styles.flexrow}>
-                <Text style={styles.labelText}>{'Price'}</Text>
-                <Text style={styles.valueText}>{`${Data?.price} INR`}</Text>
-              </View>
-              <View style={styles.flexrow}>
-                <Text style={styles.labelText}>{'Rating'}</Text>
-                <Text style={styles.valueText}>{Data?.rating}</Text>
-              </View>
-              <View style={styles.flexrow}>
-                <Text style={styles.labelText}>{'In Stock'}</Text>
-                <Text style={styles.valueText}>{`${Data?.stock} units`}</Text>
-              </View>
-              <View style={styles.flexrow}>
-                <Text style={styles.labelText}>{'Discount'}</Text>
-                <Text
-                  style={
-                    styles.valueText
-                  }>{`${Data?.discountPercentage} %`}</Text>
-              </View>
-              <View style={styles.flexrow}>
-                <Text style={styles.labelText}>{'Description'}</Text>
-                <Text style={styles.valueText}>{Data?.description}</Text>
-              </View>
+            <View style={styles.flexrow}>
+              <Text style={styles.labelText}>{'Brand'}</Text>
+              <Text style={styles.valueText}>{Data?.brand}</Text>
+            </View>
+            <View style={styles.flexrow}>
+              <Text style={styles.labelText}>{'Price'}</Text>
+              <Text style={styles.valueText}>{`${Data?.price} INR`}</Text>
+            </View>
+            <View style={styles.flexrow}>
+              <Text style={styles.labelText}>{'Rating'}</Text>
+              <Text style={styles.valueText}>{Data?.rating}</Text>
+            </View>
+            <View style={styles.flexrow}>
+              <Text style={styles.labelText}>{'In Stock'}</Text>
+              <Text style={styles.valueText}>{`${Data?.stock} units`}</Text>
+            </View>
+            <View style={styles.flexrow}>
+              <Text style={styles.labelText}>{'Discount'}</Text>
+              <Text
+                style={
+                  styles.valueText
+                }>{`${Data?.discountPercentage} %`}</Text>
+            </View>
+            <View style={styles.flexrow}>
+              <Text style={styles.labelText}>{'Description'}</Text>
+              <Text style={styles.valueText}>{Data?.description}</Text>
             </View>
           </View>
         </View>
-
-
-    
+      </ScrollView>
     </View>
   );
 };
 const renderItem = ({item, index}) => (
   <View key={index}>
-    <Image
-      source={{uri: item}}
-      style={[
-       styles.img,
-      ]}
-    />
+    <Image source={{uri: item}} style={[styles.img]} />
   </View>
 );
 
@@ -185,8 +173,8 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   tPagi: {width: 10, height: 10, borderRadius: 5, margin: 5},
-  paginate:{flexDirection: 'row', justifyContent: 'center',marginTop:'2%'},
-  container:{
+  paginate: {flexDirection: 'row', justifyContent: 'center', marginTop: '2%'},
+  container: {
     marginTop: '3%',
     backgroundColor: 'white',
     height: (height * 30) / 100,
@@ -211,6 +199,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginTop: '5%',
     padding: 15,
+    marginBottom: '10%',
     paddingBottom: (height * 3.5) / 100,
   },
   detailHeader: {

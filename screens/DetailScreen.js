@@ -13,8 +13,7 @@ import paddingHelper from '../utils/paddingHelper';
 import NavigationBackComponent from '../components/NavigationBack';
 import shadowProp from '../utils/shadowProp';
 import AnimatedLoader from 'react-native-animated-loader';
-import {Pagination} from 'react-native-snap-carousel';
-import {act} from 'react-test-renderer';
+import NetInfo from "@react-native-community/netinfo";
 
 const {width, height} = Dimensions.get('window');
 
@@ -27,8 +26,19 @@ const DetailScreen = props => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   useEffect(() => {
+    const unsubscribe = NetInfo.addEventListener(handleConnectivityChange);
     FetchUniqueProducts();
+    return () => {
+      unsubscribe();
+    };
+
   }, []);
+  const handleConnectivityChange = (state) => {
+    if (state.isConnected) {
+      // Internet connection is available, fetch data
+      FetchUniqueProducts();
+    }
+  };
   const FetchUniqueProducts = async () => {
     try {
       const response = await axios.get(
@@ -40,9 +50,11 @@ const DetailScreen = props => {
         setError(false);
       } else {
         setError(true);
+        setLoading(false);
       }
     } catch (error) {
       setError(true);
+      setLoading(false);
     }
   };
   const handlePaginationPress = index => {
@@ -63,15 +75,18 @@ const DetailScreen = props => {
         animationStyle={styles.lottie}
         speed={0.6}
       />
-      {!error ? (
+              <AnimatedLoader
+        visible={error}
+        overlayColor="grey"
+        source={require('../assets/lottie/error.json')}
+        animationStyle={styles.lottie}
+        speed={0.6}
+      />
+      
         <View>
           <View
             style={[
-              {
-                marginTop: '3%',
-                backgroundColor: 'white',
-                height: (height * 30) / 100,
-              },
+              styles.container,
               shadowProp(10, 'black'),
             ]}>
             <FlatList
@@ -79,7 +94,7 @@ const DetailScreen = props => {
               data={Data.images}
               showsHorizontalScrollIndicator={false}
               renderItem={renderItem}
-              keyExtractor={item => item.id}
+              keyExtractor={(item, index) => index.toString()}
               horizontal
               pagingEnabled
               onScroll={event => {
@@ -89,12 +104,12 @@ const DetailScreen = props => {
               }}
             />
           </View>
-          <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+          <View style={styles.paginate}>
             {Data?.images?.map((_, index) => (
               <TouchableOpacity
                 key={index}
                 style={[
-                  {width: 10, height: 10, borderRadius: 5, margin: 5},
+                 styles.tPagi  ,
                   index == activeIndex
                     ? {backgroundColor: 'blue'}
                     : {backgroundColor: 'grey'},
@@ -142,11 +157,9 @@ const DetailScreen = props => {
             </View>
           </View>
         </View>
-      ) : (
-        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-          <Text>There might be error with the server or internet</Text>
-        </View>
-      )}
+
+
+    
     </View>
   );
 };
@@ -155,13 +168,7 @@ const renderItem = ({item, index}) => (
     <Image
       source={{uri: item}}
       style={[
-        {
-          height: (height * 30.5) / 100,
-          width: (width * 100) / 100,
-          padding: '3%',
-          resizeMode: 'contain',
-          borderRadius: 5,
-        },
+       styles.img,
       ]}
     />
   </View>
@@ -170,6 +177,20 @@ const renderItem = ({item, index}) => (
 export default DetailScreen;
 
 const styles = StyleSheet.create({
+  img: {
+    height: (height * 30.5) / 100,
+    width: (width * 100) / 100,
+    padding: '3%',
+    resizeMode: 'contain',
+    borderRadius: 5,
+  },
+  tPagi: {width: 10, height: 10, borderRadius: 5, margin: 5},
+  paginate:{flexDirection: 'row', justifyContent: 'center',marginTop:'2%'},
+  container:{
+    marginTop: '3%',
+    backgroundColor: 'white',
+    height: (height * 30) / 100,
+  },
   lottie: {
     width: 200,
     height: 200,
@@ -199,14 +220,14 @@ const styles = StyleSheet.create({
     marginBottom: '3%',
   },
   labelText: {
-    fontSize: 12,
+    fontSize: 14,
     color: '#7A7A7A',
-    lineHeight: 24,
+    lineHeight: 30,
     width: '55%',
   },
   valueText: {
-    fontSize: 12,
-    lineHeight: 24,
+    fontSize: 14,
+    lineHeight: 30,
     color: '#0E0E0E',
     marginLeft: '10%',
     width: '70%',

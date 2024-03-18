@@ -6,6 +6,7 @@ import {
   Dimensions,
   FlatList,
   Pressable,
+  TextInput,
   Image,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
@@ -40,9 +41,12 @@ const HomeScreen = () => {
 
   const FetchProducts = async () => {
     try {
-      const response = await axios.get('https://dummyjson.com/products');
+      const response = await axios.get(
+        'https://openlibrary.org/subjects/sci-fi.json',
+      );
+
       if (response) {
-        setData(response?.data?.products);
+        setData(response.data.works);
         setLoading(false);
         setError(false);
       } else {
@@ -82,8 +86,8 @@ const HomeScreen = () => {
         angle={180}
         colors={['#ffb3ff', '#f2f2f2']}
         style={[styles.linearTop, shadowProp(15, 'black')]}>
-        <Text style={styles.title}>Welcome to Shopping Cart</Text>
-        {/* <View
+        <Text style={styles.title}>Welcome to Book Cart</Text>
+        <View
           style={{
             flexDirection: 'row',
             alignItems: 'center',
@@ -109,12 +113,12 @@ const HomeScreen = () => {
               marginRight: '5%',
               borderRadius: 3,
             }}></TextInput>
-        </View> */}
+        </View>
       </LinearGradient>
 
       <FlatList
         data={Data}
-        keyExtractor={id => id.id}
+        keyExtractor={(id, index) => index.toString()}
         showsVerticalScrollIndicator={false}
         style={styles.flt}
         renderItem={({item, index}) => (
@@ -125,7 +129,7 @@ const HomeScreen = () => {
               onPress={() => navigation.navigate('details', {item})}>
               <Image
                 source={{
-                  uri: item?.thumbnail,
+                  uri: `https://covers.openlibrary.org/b/id/${item?.cover_id}-L.jpg`,
                 }}
                 style={styles.img}
               />
@@ -134,26 +138,42 @@ const HomeScreen = () => {
 
                 <View style={{marginTop: '2%'}}>
                   <View style={styles.row}>
-                    <Text style={styles.description}>{'Brand '}</Text>
-                    <Text style={styles.dataDesc}>{item?.brand}</Text>
+                    <Text style={styles.description}>{'Author'}</Text>
+                    {item?.authors?.slice(0, 1).map((item, index) => (
+                      <Text style={styles.dataDesc} key={index}>
+                        {item.name}
+                      </Text>
+                    ))}
                   </View>
 
                   <View style={styles.row}>
-                    <Text style={styles.description}>{'Price '}</Text>
-                    <Text style={styles.dataDesc}>{`${item?.price} INR`}</Text>
+                    <Text style={styles.description}>{'Published In '}</Text>
+                    <Text style={styles.dataDesc}>
+                      {item?.first_publish_year}
+                    </Text>
                   </View>
 
                   <View style={styles.row}>
-                    <Text style={styles.description}>{'Ratings '}</Text>
-                    <Text style={styles.dataDesc}>{item?.rating}</Text>
+                    <Text style={styles.description}>{'Availability '}</Text>
+                    <Text style={styles.dataDesc}>
+                      {item?.availability?.status
+                        ? item?.availability?.status
+                        : 'unavailable'}
+                    </Text>
                   </View>
-
-                  <View style={styles.row}>
-                    <Text style={styles.description}>{'Discount '}</Text>
-                    <Text
-                      style={
-                        styles.dataDesc
-                      }>{`${item?.discountPercentage} %`}</Text>
+                  <View style={[styles.row]}>
+                    <Text style={styles.description}>{'Genres '}</Text>
+                    {item?.subject.slice(0, 1).map((item, index) => (
+                      <Text
+                        style={{
+                          fontSize: 18,
+                          color: '#000033',
+                          width: '70%',
+                        }}
+                        key={index}>
+                        {`${item}  `}
+                      </Text>
+                    ))}
                   </View>
                 </View>
               </View>
@@ -176,7 +196,7 @@ const HomeScreen = () => {
 export default HomeScreen;
 
 const styles = StyleSheet.create({
-  cardContainer:{marginBottom: '5%', marginTop: 10},
+  cardContainer: {marginBottom: '5%', marginTop: 10},
   row: {flexDirection: 'row', alignItems: 'center'},
   bottomLinear: {
     alignSelf: 'baseline',
@@ -241,7 +261,7 @@ const styles = StyleSheet.create({
   },
   description: {
     fontSize: 14,
-    width: '25%',
+    width: '30%',
     color: '#00004d',
     fontWeight: '500',
     marginVertical: '1.5%',
